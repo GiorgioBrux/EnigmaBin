@@ -111,11 +111,11 @@
                 </div>
 
                 {#if decryptedContent.burnOnView}
-                    <div class="bg-destructive/10 text-destructive px-4 py-2 rounded-md text-sm flex items-center gap-2">
-                        <span>🔥</span>
+                    <div class="bg-destructive/10 text-destructive px-6 py-4 rounded-md text-sm flex items-center gap-3 border border-destructive/20">
+                        <span class="text-lg">🔥</span>
                         <div>
-                            <p class="font-medium">For your eyes only</p>
-                            <p class="text-destructive/80">This paste will be permanently deleted after viewing</p>
+                            <p class="font-medium text-base">Self-Destructing Paste</p>
+                            <p class="text-destructive/80">This content has been permanently deleted from our servers and cannot be accessed again. <br>Make sure to save any important information before closing.</p>
                         </div>
                     </div>
                 {/if}

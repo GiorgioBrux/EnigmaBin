@@ -32,8 +32,8 @@
 	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl px-4">
 		<div class="flex flex-col items-center text-center space-y-2 p-6 rounded-lg border bg-card">
 			<Shield class="h-12 w-12 text-primary" />
-			<h3 class="font-semibold">End-to-End Encrypted</h3>
-			<p class="text-sm text-muted-foreground">Your pastes are encrypted before leaving your browser</p>
+			<h3 class="font-semibold">Double Encryption</h3>
+			<p class="text-sm text-muted-foreground">Protected by both quantum and classical cryptography</p>
 		</div>
 
 		<div class="flex flex-col items-center text-center space-y-2 p-6 rounded-lg border bg-card">
@@ -59,7 +59,12 @@
 	<div class="flex gap-8 justify-center text-center">
 		<div>
 			<p class="text-3xl font-bold">ML-KEM</p>
-			<p class="text-sm text-muted-foreground">Post-Quantum</p>
+			<p class="text-sm text-muted-foreground">Quantum-Resistant</p>
+		</div>
+		<div class="border-l"></div>
+		<div>
+			<p class="text-3xl font-bold">X25519</p>
+			<p class="text-sm text-muted-foreground">Classical Security</p>
 		</div>
 		<div class="border-l"></div>
 		<div>

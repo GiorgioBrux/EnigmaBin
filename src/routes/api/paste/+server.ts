@@ -44,8 +44,8 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 };
 
-function calculateExpirationDate(expiration: string): Date | null {
-    if (expiration === 'never') return null;
+function calculateExpirationDate(expiration: string | null): Date | null {
+    if (!expiration) return null;
 
     const now = new Date();
     const match = expiration.match(/(\d+)([hd])/);

@@ -22,6 +22,7 @@
 		{ value: '', label: 'Never' }
 	];
 
+	const expirationTrigger = $derived(expirationOptions.find(option => option.value === expiration)?.label ?? 'Select Expiration');
 	async function handleSubmit() {
 		if (isLoading) return;
 		isLoading = true;
@@ -117,7 +118,7 @@
 							</label>
 							<Select.Root type="single" bind:value={expiration}>
 								<Select.Trigger class="w-full">
-									{expiration}
+									{expirationTrigger}
 								</Select.Trigger>
 								<Select.Content>
 									{#each expirationOptions as option}

@@ -21,8 +21,8 @@
 				<Card.Header>
 					<Card.Title>1. Client-Side Encryption</Card.Title>
 					<Card.Description>
-						Your content is encrypted in your browser using ML-KEM (a post-quantum KEM) for key exchange and
-						ChaCha20-Poly1305 for authenticated encryption.
+						Your content is encrypted in your browser using a hybrid system: ML-KEM (post-quantum) and X25519 
+						(classical), both protecting the ChaCha20-Poly1305 encryption.
 					</Card.Description>
 				</Card.Header>
 			</Card.Root>
@@ -65,9 +65,9 @@
 			<div class="flex gap-4">
 				<Shield class="h-6 w-6 text-primary flex-shrink-0" />
 				<div>
-					<h3 class="font-semibold">Post-Quantum Cryptography</h3>
+					<h3 class="font-semibold">Hybrid Cryptography</h3>
 					<p class="text-sm text-muted-foreground">
-						ML-KEM-1024 (Kyber) for quantum-resistant key encapsulation, standardized by NIST.
+						ML-KEM-1024 (Kyber) for quantum resistance combined with X25519 for classical security.
 					</p>
 				</div>
 			</div>
@@ -134,9 +134,10 @@
 	<div class="space-y-4 border-t pt-8">
 		<h2 class="text-2xl font-bold tracking-tighter">Our Privacy Commitment</h2>
 		<p class="text-muted-foreground">
-			EnigmaBin was built with privacy as its foundation. We use post-quantum cryptography to ensure your
-			data remains secure even against future quantum computers. Our zero-knowledge architecture means we
-			never have access to your unencrypted data.
+			EnigmaBin was built with privacy as its foundation. We use a hybrid cryptographic system combining 
+			post-quantum (ML-KEM) and classical (X25519) algorithms to ensure your data remains secure against 
+			both quantum and classical attacks. Our zero-knowledge architecture means we never have access to 
+			your unencrypted data.
 		</p>
 	</div>
 </div>

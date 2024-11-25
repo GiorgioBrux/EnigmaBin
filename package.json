@@ -50,6 +50,7 @@
 	},
 	"dependencies": {
 		"@prisma/client": "5.22.0",
+		"@vercel/analytics": "^1.4.1",
 		"libsodium": "^0.7.15",
 		"libsodium-wrappers": "^0.7.15",
 		"mlkem": "^2.3.0",

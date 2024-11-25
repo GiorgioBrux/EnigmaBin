@@ -7,6 +7,9 @@
 </script>
 
 <div class="relative min-h-screen flex flex-col">
+	<div class="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-900 dark:text-yellow-100 py-2 text-center text-sm">
+		🚧 Development Preview: Features and data are not final and may be reset at any time
+	</div>
 	<header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 		<div class="container flex h-14 items-center">
 			<a href="/" class="flex items-center space-x-2">
@@ -50,7 +53,7 @@
 			</p>
 			<p class="text-center text-sm text-muted-foreground md:text-left">
 				<a 
-					href="https://github.com/yourusername/enigmabin" 
+					href="https://github.com/giorgiobrux/enigmabin" 
 					target="_blank"
 					rel="noreferrer"
 					class="font-medium underline underline-offset-4"

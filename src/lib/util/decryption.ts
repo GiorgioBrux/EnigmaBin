@@ -11,35 +11,61 @@ export async function decrypt(
     const sodium = _sodium;
 
     try {
-        // Initialize Kyber
+        // Split the combined decryption key
+        const combinedKey = sodium.from_base64(decryptionKeyBase64);
+        
+        // Log the total length
+        console.log('Combined key length:', combinedKey.length);
+        
+        // MLKEM-1024 secret key is 3168 bytes
+        const secretKey1 = combinedKey.slice(0, 3168);
+        // X25519 secret key is 32 bytes
+        const secretKey2 = combinedKey.slice(3168, 3168 + 32);
+        // X25519 public key is 32 bytes
+        const publicKey2 = combinedKey.slice(3168 + 32);
+        
+        // Log the split lengths
+        console.log('Split lengths:', {
+            secretKey1: secretKey1.length,
+            secretKey2: secretKey2.length,
+            publicKey2: publicKey2.length
+        });
+
+        // Layer 1: Kyber decryption
         const kyber = new MlKem1024();
-
-        // Convert base64 strings back to Uint8Arrays
-        const secretKey = sodium.from_base64(decryptionKeyBase64);
-        const ciphertext = sodium.from_base64(encrypted.ciphertext);
-        const nonce = sodium.from_base64(encrypted.nonce);
-        const encryptedContent = sodium.from_base64(encrypted.content);
-
-        // Verify version
-        if (encrypted.version !== '1') {
-            throw new Error('Unsupported encryption version');
-        }
-
-        // Decapsulate the shared secret using Kyber
-        const sharedSecret = await kyber.decap(ciphertext, secretKey);
-
-        // Decrypt the content using ChaCha20-Poly1305
-        const decrypted = sodium.crypto_aead_chacha20poly1305_decrypt(
-            null,      // nsec - not used
-            encryptedContent,
-            null,      // additional data
-            nonce,
-            sharedSecret
+        const sharedSecret1 = await kyber.decap(
+            sodium.from_base64(encrypted.ciphertext1), 
+            secretKey1
         );
 
-        // Parse the decrypted JSON content
+        // Layer 2: X25519 decryption
+        const sharedSecret2 = sodium.crypto_box_seal_open(
+            sodium.from_base64(encrypted.ciphertext2),
+            publicKey2,
+            secretKey2
+        );
+
+        // Decrypt outer layer (X25519)
+        const decrypted1 = sodium.crypto_aead_chacha20poly1305_decrypt(
+            null,
+            sodium.from_base64(encrypted.content),
+            null,
+            sodium.from_base64(encrypted.nonce2),
+            sharedSecret2
+        );
+
+        // Decrypt inner layer (Kyber)
+        const decrypted2 = sodium.crypto_aead_chacha20poly1305_decrypt(
+            null,
+            decrypted1,
+            null,
+            sodium.from_base64(encrypted.nonce1),
+            sharedSecret1
+        );
+
+        // Parse the final decrypted content
         const pasteContent: PasteContent = JSON.parse(
-            sodium.to_string(decrypted)
+            sodium.to_string(decrypted2)
         );
 
         // If it's burn-on-view and has a burn token, send it with the burn request
