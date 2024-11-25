@@ -8,8 +8,8 @@
 	<div class="space-y-4">
 		<h1 class="text-4xl font-bold tracking-tighter">About EnigmaBin</h1>
 		<p class="text-lg text-muted-foreground">
-			EnigmaBin is a secure, privacy-focused pastebin service built with end-to-end encryption at its core.
-			We believe code sharing shouldn't compromise security.
+			EnigmaBin is a secure, privacy-focused pastebin service built with flexible end-to-end encryption options.
+			We believe code sharing shouldn't compromise security or usability.
 		</p>
 	</div>
 
@@ -21,8 +21,8 @@
 				<Card.Header>
 					<Card.Title>1. Client-Side Encryption</Card.Title>
 					<Card.Description>
-						Your content is encrypted in your browser using a hybrid system: ML-KEM (post-quantum) and X25519 
-						(classical), both protecting the ChaCha20-Poly1305 encryption.
+						Your content is encrypted in your browser using either fast classical encryption (X25519) or enhanced 
+						dual-layer protection that adds ML-KEM for quantum resistance.
 					</Card.Description>
 				</Card.Header>
 			</Card.Root>
@@ -32,7 +32,7 @@
 					<Card.Title>2. Secure Storage</Card.Title>
 					<Card.Description>
 						We store only encrypted data and temporary burn tokens. Even with direct database access, your
-						content remains protected.
+						content remains protected by your chosen encryption method.
 					</Card.Description>
 				</Card.Header>
 			</Card.Root>
@@ -41,8 +41,8 @@
 				<Card.Header>
 					<Card.Title>3. Secure Sharing</Card.Title>
 					<Card.Description>
-						Share links contain the ML-KEM decryption key in the URL fragment, which never reaches our
-						servers.
+						Share links contain the decryption keys in the URL fragment. Classical mode generates shorter URLs,
+						while quantum mode adds extra protection with longer URLs (about ~4k characters).
 					</Card.Description>
 				</Card.Header>
 			</Card.Root>
@@ -65,9 +65,9 @@
 			<div class="flex gap-4">
 				<Shield class="h-6 w-6 text-primary flex-shrink-0" />
 				<div>
-					<h3 class="font-semibold">Hybrid Cryptography</h3>
+					<h3 class="font-semibold">Flexible Encryption</h3>
 					<p class="text-sm text-muted-foreground">
-						ML-KEM-1024 (Kyber) for quantum resistance combined with X25519 for classical security.
+						Choose between fast X25519 classical encryption or enhanced security with both X25519 and ML-KEM-1024 working together.
 					</p>
 				</div>
 			</div>
@@ -77,7 +77,7 @@
 				<div>
 					<h3 class="font-semibold">Authenticated Encryption</h3>
 					<p class="text-sm text-muted-foreground">
-						ChaCha20-Poly1305 AEAD using libsodium for high-security symmetric encryption.
+						ChaCha20-Poly1305 AEAD using libsodium provides fast, secure symmetric encryption for your content.
 					</p>
 				</div>
 			</div>
@@ -97,7 +97,7 @@
 				<div>
 					<h3 class="font-semibold">Editor Integration</h3>
 					<p class="text-sm text-muted-foreground">
-						Monaco Editor (VS Code's editor) with support for 100+ programming languages.
+						Monaco Editor (VS Code's editor) with support for many popular programming languages.
 					</p>
 				</div>
 			</div>
@@ -113,7 +113,8 @@
 				<div>
 					<h3 class="font-semibold">Secure Key Management</h3>
 					<p class="text-sm text-muted-foreground">
-						Decryption keys are transmitted via URL fragments, never touching our servers.
+						Decryption keys are transmitted via URL fragments, never touching our servers. Choose between shorter
+						classical keys or enhanced quantum-resistant keys.
 					</p>
 				</div>
 			</div>
@@ -123,7 +124,7 @@
 				<div>
 					<h3 class="font-semibold">No Logs Policy</h3>
 					<p class="text-sm text-muted-foreground">
-						Zero logs of paste content, IP addresses, or user activity. Minimal metadata retention.
+						Zero logs of paste content, IP addresses, or user activity. We use Vercel Analytics for minimal metrics.
 					</p>
 				</div>
 			</div>
@@ -134,10 +135,10 @@
 	<div class="space-y-4 border-t pt-8">
 		<h2 class="text-2xl font-bold tracking-tighter">Our Privacy Commitment</h2>
 		<p class="text-muted-foreground">
-			EnigmaBin was built with privacy as its foundation. We use a hybrid cryptographic system combining 
-			post-quantum (ML-KEM) and classical (X25519) algorithms to ensure your data remains secure against 
-			both quantum and classical attacks. Our zero-knowledge architecture means we never have access to 
-			your unencrypted data.
+			EnigmaBin was built with privacy as its foundation. By default, we use fast and secure classical encryption (X25519). 
+			For enhanced security, you can enable our dual-layer encryption that combines both ML-KEM and X25519, protecting against 
+			both current and future quantum threats. This flexibility lets you choose the right balance of security and usability 
+			for your needs. Our zero-knowledge architecture means we never have access to your unencrypted data.
 		</p>
 	</div>
 </div>

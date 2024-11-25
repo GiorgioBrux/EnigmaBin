@@ -2,17 +2,16 @@
     import { onMount } from 'svelte';
     import MonacoEditor from "$lib/components/custom-ui/monaco-editor/monaco-editor.svelte";
     import { decrypt } from '$lib/util/decryption';
-    import type { PageData } from './$types';
     import { Button } from "$lib/components/ui/button";
     import { Copy } from 'lucide-svelte';
-	import type { EncryptedData } from '$lib/util/encryption';
+	import type { EncryptedData, PasteContent } from '$lib/util/encryption';
 	import { toast } from "svelte-sonner";
 
-    export let data: PageData;
+    let { data } = $props();
 
-    let decryptedContent: { content: string; burnOnView: boolean } | null = null;
-    let error: string | null = null;
-    let loading = true;
+    let decryptedContent: PasteContent | null = $state(null);
+    let error: string | null = $state(null);
+    let loading = $state(true);
 
     async function copyContent() {
         if (decryptedContent) {
@@ -28,11 +27,17 @@
 
         try {
             decryptedContent = await decrypt(
-                data.id,
                 data.encrypted as unknown as EncryptedData,
                 decryptionKey
             );
             error = null;
+
+            if(decryptedContent && decryptedContent.burnToken) {
+                await fetch('/api/paste/delete', {
+                    method: 'POST',
+                    body: JSON.stringify({ id: data.id, burnToken: decryptedContent.burnToken })
+                });
+            }
         } catch (e) {
             error = 'Failed to decrypt paste. The decryption key might be invalid.';
             console.error(e);
@@ -101,7 +106,7 @@
             </div>
 
             <div class="flex justify-between items-start">
-                <div class="text-muted-foreground flex flex-col gap-1">
+                <div class="text-muted-foreground flex flex-col gap-1 mr-6">
                     {#if data.createdAt}
                         <p>Created {new Date(data.createdAt).toLocaleString()}</p>
                     {/if}
@@ -110,8 +115,8 @@
                     {/if}
                 </div>
 
-                {#if decryptedContent.burnOnView}
-                    <div class="bg-destructive/10 text-destructive px-6 py-4 rounded-md text-sm flex items-center gap-3 border border-destructive/20">
+                {#if decryptedContent.burnToken}
+                    <div class="bg-destructive/10 text-destructive pl-2 pr-6 py-4 rounded-md text-sm flex items-center gap-3 border border-destructive/20">
                         <span class="text-lg">🔥</span>
                         <div>
                             <p class="font-medium text-base">Self-Destructing Paste</p>

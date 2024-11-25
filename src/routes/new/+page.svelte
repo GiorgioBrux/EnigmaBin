@@ -3,7 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
-	import { Clock, Copy, Flame, Loader2 } from 'lucide-svelte';
+	import { Clock, Copy, Flame, Loader2, Shield } from 'lucide-svelte';
 	import { encrypt } from '$lib/util/encryption';
 	import { toast } from 'svelte-sonner';
 
@@ -11,6 +11,7 @@
 	let content = $state('');
 	let expiration = $state('7d'); // Default to 7 days
 	let burnOnView = $state(false);
+	let useQuantum = $state(false);
 	let generatedUrl = $state('');
 	let isLoading = $state(false);
 
@@ -28,8 +29,13 @@
 		isLoading = true;
 
 		try {
+			const initResponse = await fetch('/api/paste/init', {
+				method: 'POST'
+			});
+
+			const { pasteId, burnToken } = await initResponse.json();
 			// Encrypt the content with burnOnView flag
-			const { encrypted, decryptionKey, pasteId } = await encrypt(content, burnOnView);
+			const { encrypted, decryptionKey } = await encrypt(content, burnOnView ? burnToken : undefined, useQuantum);
 
 			// Send to server
 			const response = await fetch('/api/paste', {
@@ -38,7 +44,8 @@
 				body: JSON.stringify({
 					id: pasteId,
 					encrypted,
-					expiration
+					expiration,
+					burnToken
 				})
 			});
 
@@ -130,6 +137,20 @@
 
 						<div>
 							<label class="mb-1.5 flex items-center gap-2 text-sm font-medium">
+								<Shield class="h-4 w-4" />
+								Quantum Resistance
+							</label>
+							<div class="flex items-center space-x-2">
+								<Switch bind:checked={useQuantum} />
+								<span class="text-sm text-muted-foreground">Enable quantum-resistant encryption</span>
+							</div>
+							<p class="mt-1 text-xs text-muted-foreground">
+								Adds an extra layer of quantum-resistant encryption. Provides additional security but results in longer URLs (up to ~4.5k characters).
+							</p>
+						</div>
+
+						<div>
+							<label class="mb-1.5 flex items-center gap-2 text-sm font-medium">
 								<Flame class="h-4 w-4" />
 								Burn after reading
 							</label>
@@ -138,8 +159,7 @@
 								<span class="text-sm text-muted-foreground">Delete after first view</span>
 							</div>
 							<p class="mt-1 text-xs text-muted-foreground">
-								Note: Burn after reading is enforced by the viewing client. A modified or malicious
-								client could choose not to delete the content after viewing.
+								Note: Burn-after-reading is enforced client-side. A modified client could potentially bypass this restriction, so treat this as a convenience feature rather than a security guarantee.
 							</p>
 						</div>
 					</div>
@@ -166,10 +186,20 @@
 								placeholder="Paste URL will appear here"
 								value={generatedUrl || ''}
 							/>
-							<Button variant="outline" class="h-10 w-10 p-0" title="Copy URL" onclick={copyUrl}>
+							<Button 
+								variant="outline" 
+								class="h-10 w-10 min-w-[2.5rem] aspect-square p-0" 
+								title="Copy URL" 
+								onclick={copyUrl}
+							>
 								<Copy class="h-4 w-4" />
 							</Button>
 						</div>
+
+						<p class="text-sm text-muted-foreground">
+							The generated URL contains the decryption key. Anyone with this URL will be able to decrypt and view the content.
+						</p>
+
 						{#if !isValid && content.length > MAX_CHARS}
 							<p class="text-sm text-destructive">
 								Content exceeds maximum length of {MAX_CHARS.toLocaleString()} characters

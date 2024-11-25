@@ -16,7 +16,7 @@ datasource db {
 model Paste {
   id         String    @id
   encrypted  Json?
-  burnToken String?
+  burnToken  String
   expiresAt  DateTime?
   createdAt  DateTime  @default(now())
 

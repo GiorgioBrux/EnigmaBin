@@ -42,26 +42,3 @@ export const load: PageServerLoad = async ({ params }) => {
         throw error(500, 'Failed to retrieve paste');
     }
 };
-
-export const actions = {
-    delete: async ({ params, request }) => {
-        const data = await request.json();
-        const paste = await prisma.paste.findUnique({
-            where: { id: params.id }
-        });
-
-        if (!paste || !paste.burnToken) {
-            throw error(404, 'Paste not found');
-        }
-
-        // Simple token comparison
-        if (data.burnToken !== paste.burnToken) {
-            throw error(403, 'Invalid burn token');
-        }
-
-        await prisma.paste.delete({
-            where: { id: params.id }
-        });
-        return { success: true };
-    }
-};

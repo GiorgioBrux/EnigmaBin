@@ -10,7 +10,7 @@
 			Share Code <span class="text-primary">Securely</span>
 		</h1>
 		<p class="max-w-[700px] text-lg text-muted-foreground">
-			Zero-knowledge pastebin with end-to-end encryption.
+			Zero-knowledge pastebin with flexible end-to-end encryption options.
 		</p>
 		<div class="flex gap-4 justify-center pt-4">
 			<a
@@ -32,8 +32,8 @@
 	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl px-4">
 		<div class="flex flex-col items-center text-center space-y-2 p-6 rounded-lg border bg-card">
 			<Shield class="h-12 w-12 text-primary" />
-			<h3 class="font-semibold">Double Encryption</h3>
-			<p class="text-sm text-muted-foreground">Protected by both quantum and classical cryptography</p>
+			<h3 class="font-semibold">Flexible Security</h3>
+			<p class="text-sm text-muted-foreground">Choose between fast classical or enhanced dual-layer encryption</p>
 		</div>
 
 		<div class="flex flex-col items-center text-center space-y-2 p-6 rounded-lg border bg-card">
@@ -45,7 +45,7 @@
 		<div class="flex flex-col items-center text-center space-y-2 p-6 rounded-lg border bg-card">
 			<Code2 class="h-12 w-12 text-primary" />
 			<h3 class="font-semibold">Syntax Highlighting</h3>
-			<p class="text-sm text-muted-foreground">Support for 100+ programming languages</p>
+			<p class="text-sm text-muted-foreground">Support for many popular programming languages</p>
 		</div>
 
 		<div class="flex flex-col items-center text-center space-y-2 p-6 rounded-lg border bg-card">
@@ -55,26 +55,26 @@
 		</div>
 	</div>
 
-	<!-- Quick Stats -->
-	<div class="flex gap-8 justify-center text-center">
-		<div>
-			<p class="text-3xl font-bold">ML-KEM</p>
-			<p class="text-sm text-muted-foreground">Quantum-Resistant</p>
+	<!-- Quick Stats: Updated with responsive classes -->
+	<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8 justify-center text-center max-w-[900px] px-4">
+		<div class="space-y-1">
+			<p class="text-2xl lg:text-3xl font-bold">X25519</p>
+			<p class="text-xs lg:text-sm text-muted-foreground">Default Security</p>
 		</div>
-		<div class="border-l"></div>
-		<div>
-			<p class="text-3xl font-bold">X25519</p>
-			<p class="text-sm text-muted-foreground">Classical Security</p>
+		
+		<div class="space-y-1">
+			<p class="text-2xl lg:text-3xl font-bold">ML-KEM</p>
+			<p class="text-xs lg:text-sm text-muted-foreground">Optional Quantum Layer</p>
 		</div>
-		<div class="border-l"></div>
-		<div>
-			<p class="text-3xl font-bold">ChaCha20</p>
-			<p class="text-sm text-muted-foreground">Encryption</p>
+		
+		<div class="space-y-1">
+			<p class="text-2xl lg:text-3xl font-bold">ChaCha20</p>
+			<p class="text-xs lg:text-sm text-muted-foreground">Encryption</p>
 		</div>
-		<div class="border-l"></div>
-		<div>
-			<p class="text-3xl font-bold">Poly1305</p>
-			<p class="text-sm text-muted-foreground">Authentication</p>
+		
+		<div class="space-y-1">
+			<p class="text-2xl lg:text-3xl font-bold">Poly1305</p>
+			<p class="text-xs lg:text-sm text-muted-foreground">Authentication</p>
 		</div>
 	</div>
 </div>
