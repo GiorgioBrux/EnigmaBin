@@ -27,6 +27,15 @@
 						About
 					</a>
 					<a 
+						href="/faq"
+						class={cn(
+							"text-sm font-medium transition-colors hover:text-primary",
+							"text-muted-foreground"
+						)}
+					>
+						FAQ
+					</a>
+					<a 
 						href="/new"
 						class={cn(
 							"text-sm font-medium transition-colors hover:text-primary",

@@ -13,6 +13,7 @@
 	let burnOnView = $state(false);
 	let useQuantum = $state(false);
 	let generatedUrl = $state('');
+	let generatedBurnUrl = $state('');
 	let isLoading = $state(false);
 
 	const expirationOptions = [
@@ -23,7 +24,9 @@
 		{ value: '', label: 'Never' }
 	];
 
-	const expirationTrigger = $derived(expirationOptions.find(option => option.value === expiration)?.label ?? 'Select Expiration');
+	const expirationTrigger = $derived(
+		expirationOptions.find((option) => option.value === expiration)?.label ?? 'Select Expiration'
+	);
 	async function handleSubmit() {
 		if (isLoading) return;
 		isLoading = true;
@@ -35,7 +38,11 @@
 
 			const { pasteId, burnToken } = await initResponse.json();
 			// Encrypt the content with burnOnView flag
-			const { encrypted, decryptionKey } = await encrypt(content, burnOnView ? burnToken : undefined, useQuantum);
+			const { encrypted, decryptionKey } = await encrypt(
+				content,
+				burnOnView ? burnToken : undefined,
+				useQuantum
+			);
 
 			// Send to server
 			const response = await fetch('/api/paste', {
@@ -53,6 +60,7 @@
 
 			// Generate the full URL with the decryption key in the fragment
 			generatedUrl = `${window.location.origin}${url}#${decryptionKey}`;
+			generatedBurnUrl = `${window.location.origin}${url}/delete#${burnToken}`;
 
 			toast.success('Paste created successfully!');
 		} catch (error) {
@@ -64,10 +72,10 @@
 	}
 
 	// Add a function to handle copying
-	async function copyUrl() {
-		if (generatedUrl) {
+	async function copyUrl(content: string) {
+		if (content) {
 			try {
-				await navigator.clipboard.writeText(generatedUrl);
+				await navigator.clipboard.writeText(content);
 				toast.success('URL copied to clipboard!');
 			} catch (error) {
 				toast.error('Failed to copy URL');
@@ -129,10 +137,22 @@
 								</Select.Trigger>
 								<Select.Content>
 									{#each expirationOptions as option}
-										<Select.Item value={option.value} label={option.label}>{option.label}</Select.Item>
+										<Select.Item value={option.value} label={option.label}
+											>{option.label}</Select.Item
+										>
 									{/each}
 								</Select.Content>
 							</Select.Root>
+							{#if expiration === ''}
+								<div class="mt-1 text-xs text-amber-500 dark:text-amber-400">
+									⚠️ Warning: Setting no expiration means the paste will be stored indefinitely unless:
+									<ul class="list-disc pl-4 mt-1">
+										<li>You manually delete it using the deletion URL</li>
+										<li>It's accessed with burn-after-reading enabled</li>
+									</ul>
+									Consider setting an expiration time as a safety measure.
+								</div>
+							{/if}
 						</div>
 
 						<div>
@@ -142,10 +162,13 @@
 							</label>
 							<div class="flex items-center space-x-2">
 								<Switch bind:checked={useQuantum} />
-								<span class="text-sm text-muted-foreground">Enable quantum-resistant encryption</span>
+								<span class="text-sm text-muted-foreground"
+									>Enable quantum-resistant encryption</span
+								>
 							</div>
 							<p class="mt-1 text-xs text-muted-foreground">
-								Adds an extra layer of quantum-resistant encryption. Provides additional security but results in longer URLs (up to ~4.5k characters).
+								Adds an extra layer of quantum-resistant encryption. Provides additional security
+								but results in longer URLs (up to ~4.5k characters).
 							</p>
 						</div>
 
@@ -156,10 +179,13 @@
 							</label>
 							<div class="flex items-center space-x-2">
 								<Switch bind:checked={burnOnView} />
-								<span class="text-sm text-muted-foreground">Delete after first view</span>
+								<span class="text-sm text-muted-foreground">Delete after first successful decryption</span>
 							</div>
 							<p class="mt-1 text-xs text-muted-foreground">
-								Note: Burn-after-reading is enforced client-side. A modified client could potentially bypass this restriction, so treat this as a convenience feature rather than a security guarantee.
+								Note: The paste is deleted only when someone successfully decrypts and reads the content. 
+								Simply viewing the encrypted data without the correct decryption key won't trigger deletion. 
+								While this provides an additional security layer, it's still enforced client-side and should 
+								be treated as a convenience feature rather than a security guarantee.
 							</p>
 						</div>
 					</div>
@@ -178,27 +204,75 @@
 							{/if}
 						</Button>
 
-						<div class="flex items-center gap-2">
-							<input
-								type="text"
-								readonly
-								class="h-10 flex-1 rounded-md border bg-muted px-3"
-								placeholder="Paste URL will appear here"
-								value={generatedUrl || ''}
-							/>
-							<Button 
-								variant="outline" 
-								class="h-10 w-10 min-w-[2.5rem] aspect-square p-0" 
-								title="Copy URL" 
-								onclick={copyUrl}
-							>
-								<Copy class="h-4 w-4" />
-							</Button>
+						<!-- Decryption URL Box -->
+						<div class="space-y-3 rounded-lg border bg-primary/5 p-3">
+							<div class="flex items-center gap-2">
+								<input
+									type="text"
+									readonly
+									class="h-10 flex-1 rounded-md border bg-background/50 px-3"
+									placeholder="Paste URL will appear here"
+									value={generatedUrl}
+								/>
+								<Button
+									variant="outline"
+									class="aspect-square h-10 w-10 min-w-[2.5rem] p-0"
+									title="Copy URL"
+									onclick={() => copyUrl(generatedUrl)}
+								>
+									<Copy class="h-4 w-4" />
+								</Button>
+							</div>
+							<div class="space-y-2">
+								<p class="text-sm text-muted-foreground">
+									🔐 <strong>Decryption URL</strong> - Share this with people who need to view the content:
+								</p>
+								<ul class="list-disc space-y-1 pl-4 text-xs text-muted-foreground">
+									<li>Contains the decryption key needed to view the content</li>
+									<li>Share securely - anyone with this URL can access the paste</li>
+									<li>Store safely if you need to access the content later</li>
+									<li class="text-amber-500 dark:text-amber-400">
+										If you lose this URL, the content will be lost forever.
+									</li>
+								</ul>
+							</div>
 						</div>
 
-						<p class="text-sm text-muted-foreground">
-							The generated URL contains the decryption key. Anyone with this URL will be able to decrypt and view the content.
-						</p>
+						<!-- Burn URL Box -->
+						<div class="space-y-3 rounded-lg border bg-destructive/5 p-3">
+							<div class="flex items-center gap-2">
+								<input
+									type="text"
+									readonly
+									class="h-10 flex-1 rounded-md border bg-background/50 px-3"
+									placeholder="Burn URL will appear here"
+									value={generatedBurnUrl}
+								/>
+								<Button
+									variant="outline"
+									class="aspect-square h-10 w-10 min-w-[2.5rem] p-0"
+									title="Copy URL"
+									onclick={() => copyUrl(generatedBurnUrl)}
+								>
+									<Copy class="h-4 w-4" />
+								</Button>
+							</div>
+							<div class="space-y-2">
+								<p class="text-sm text-muted-foreground">
+									🔥 <strong>Deletion URL</strong> - Keep this private:
+								</p>
+								<ul class="list-disc space-y-1 pl-4 text-xs text-muted-foreground">
+									<li>Allows permanent deletion of the paste</li>
+									<li>Keep this URL private and secure</li>
+									<li>Cannot be recovered if lost</li>
+									{#if !expiration}
+										<li class="text-amber-500 dark:text-amber-400">
+											Since no expiration is set, this URL {burnOnView ? 'and the burn-after-reading feature' : ''} is the only way to delete the paste.
+										</li>
+									{/if}
+								</ul>
+							</div>
+						</div>
 
 						{#if !isValid && content.length > MAX_CHARS}
 							<p class="text-sm text-destructive">
