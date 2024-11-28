@@ -72,6 +72,28 @@
 					</div>
 				</Accordion.Content>
 			</Accordion.Item>
+            <Accordion.Item value="contact">
+                <Accordion.Trigger>How can I contact you?</Accordion.Trigger>
+                <Accordion.Content>
+                    <div class="space-y-2 text-muted-foreground">
+                        <p>
+                            For general inquiries and security concerns, you can reach us at <a href="mailto:enigmabin@reizouko.eu" class="text-primary hover:underline">contact@yourdomain.com</a>
+                        </p>
+                        <p>For bug reports, feature requests, and code-related discussions, please use our 
+                            <a
+                                href="https://github.com/giorgiobrux/enigmabin/issues"
+                                class="text-primary hover:underline inline-flex items-center gap-1"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                GitHub Issues
+                                <ExternalLink class="h-3 w-3" />
+                            </a>
+                            page.
+                        </p>
+                    </div>
+                </Accordion.Content>
+            </Accordion.Item>
 		</Accordion.Root>
 	</div>
 

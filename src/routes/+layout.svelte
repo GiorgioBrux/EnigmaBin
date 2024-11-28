@@ -1,9 +1,13 @@
 <script lang="ts">
 	import '../app.css';
 	import { cn } from '$lib/utils';
+	import { ModeWatcher } from "mode-watcher";
+	import { toggleMode } from "mode-watcher";
+	import Sun from "lucide-svelte/icons/sun";
+	import Moon from "lucide-svelte/icons/moon";
+	import { Button } from "$lib/components/ui/button/index.js";
 	let { children } = $props();
 	import { Toaster } from "$lib/components/ui/sonner/index.js";
-
 </script>
 
 <div class="relative min-h-screen flex flex-col">
@@ -44,11 +48,21 @@
 					>
 						New Paste
 					</a>
+					<Button onclick={toggleMode} variant="outline" size="icon">
+						<Sun
+							class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+						/>
+						<Moon
+							class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+						/>
+						<span class="sr-only">Toggle theme</span>
+					</Button>
 				</nav>
 			</div>
 		</div>
 	</header>
-
+	
+	<ModeWatcher />
 	<Toaster />
 
 	<main class="flex-1 container py-6">
@@ -60,7 +74,13 @@
 			<p class="text-center text-sm leading-loose text-muted-foreground md:text-left">
 				Built with privacy in mind. All pastes are encrypted end-to-end.
 			</p>
-			<p class="text-center text-sm text-muted-foreground md:text-left">
+			<div class="flex gap-4 text-center text-sm text-muted-foreground md:text-left">
+				<a 
+					href="mailto:enigmabin@reizouko.eu"
+					class="font-medium underline underline-offset-4"
+				>
+					Contact
+				</a>
 				<a 
 					href="https://github.com/giorgiobrux/enigmabin" 
 					target="_blank"
@@ -69,7 +89,7 @@
 				>
 					GitHub
 				</a>
-			</p>
+			</div>
 		</div>
 	</footer>
 </div>
